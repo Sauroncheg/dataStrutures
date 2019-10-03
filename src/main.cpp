@@ -1,6 +1,8 @@
 #include "Trie.hh"
+#include "CollapsedTrie.hh"
+#include <iostream>
 
-void print(Trie<SmallLetters, int>* root, const std::string& name) {
+void print(Trie<int, SmallLetters>* root, const std::string& name) {
 	auto it = root->search(name);
 	try {
 		std::cout << it.value() << '\n';
@@ -11,7 +13,7 @@ void print(Trie<SmallLetters, int>* root, const std::string& name) {
 }
 
 int main() {
-	auto* root = new Trie<SmallLetters, int>;
+	auto* root = new Trie<int, SmallLetters>;
 	root->insert("geeks", 1);
 	root->insert("for", 1);
 	print(root, "geeks");

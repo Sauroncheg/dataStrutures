@@ -1,5 +1,6 @@
 // A memory optimized CPP implementation of trie 
 // using unordered_map 
+#pragma once
 #include <iostream> 
 #include <unordered_map> 
 #include <array>
@@ -7,19 +8,11 @@
 
 using namespace std;
 
-struct SmallLetters {
-	static const int itemCount = 26;
-
-	static int hash(const char x) {
-		return x - 'a';
-	}
-};
-
-template <class Logic, class Item>
+template <class Item, class Logic>
 class Trie {
-	// isEndOfWord is true if the node 
+	// value is true if the node 
 	// represents end of a word 
-	std::optional<Item> isEndOfWord{};
+	std::optional<Item> value{};
 
 	Logic logic;
 
@@ -45,7 +38,7 @@ public:
 			temp = temp->map[logic.hash(x)];
 		}
 
-		temp->isEndOfWord.emplace(item);
+		temp->value.emplace(item);
 	}
 
 	/*function to search in trie*/
@@ -59,6 +52,6 @@ public:
 			if (temp == nullptr)
 				return {};
 		}
-		return temp->isEndOfWord;
+		return temp->value;
 	}
 };

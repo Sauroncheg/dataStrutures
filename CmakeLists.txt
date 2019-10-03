@@ -8,7 +8,7 @@ ADD_SUBDIRECTORY (googletest)
 enable_testing()
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 if (MSVC)
-	set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+	set(gtest_force_shared_crt OFF CACHE BOOL "" FORCE)
 endif  (MSVC)
 
 ################################
@@ -28,3 +28,6 @@ add_executable(data_strutures src/main.cpp)
 if (MSVC)
 	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT runUnitTests)
 endif  (MSVC)
+
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/asd1m.txt
+     DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

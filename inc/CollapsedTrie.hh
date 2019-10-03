@@ -1,8 +1,10 @@
 // A memory optimized CPP implementation of trie 
+#pragma once
 #include <iostream> 
 #include <unordered_map> 
 #include <array>
 #include <optional>
+#include <algorithm>
 
 using namespace std;
 
@@ -14,11 +16,11 @@ struct SmallLetters {
 	}
 };
 
-template <class Logic, class Item>
+template <class Item, class Logic>
 class CollapsedTrie {
-	// isEndOfWord is true if the node 
+	// value is true if the node 
 	// represents end of a word 
-	std::optional<Item> isEndOfWord{};
+	std::optional<Item> value{};
 
 	std::string longKey;
 
@@ -33,20 +35,27 @@ class CollapsedTrie {
 		return node;
 	}
 
+	~CollapsedTrie() {
+		for (auto* it : map) {
+			if (it)
+				delete it;
+		}
+	}
+
 	void separate(const string_view& _str, Item item, CollapsedTrie* curItem, int substrbegin, int substrofset) {
 		std::string temp = curItem->longKey;
 		curItem->longKey = temp.substr(0, substrofset);
 		CollapsedTrie * it = new CollapsedTrie;
 		it->longKey = temp.substr(substrofset + 1);
 		it->map.swap(curItem->map);
-		it->isEndOfWord.swap(curItem->isEndOfWord);
+		it->value.swap(curItem->value);
 		curItem->map[logic.hash(temp[substrofset])] = it;
 		if (_str.size() > substrbegin + substrofset) {
 			auto& i = curItem->map[logic.hash(_str[substrbegin + substrofset])] = getNewTrieNode();
 			i->longKey = _str.substr(substrbegin + substrofset + 1);
-			i->isEndOfWord = item;
+			i->value = item;
 		} else {
-			curItem->isEndOfWord.emplace(item);
+			curItem->value.emplace(item);
 		}
 	}
 
@@ -69,9 +78,11 @@ public:
 
 			/* make a new node if there is no path */
 			if (std::all_of(temp->map.begin(), temp->map.end(), [](CollapsedTrie* i) {return !i;})) {
-				temp->longKey = _str.substr(i);
-				temp->isEndOfWord.emplace(item);
-				return;
+				if (temp->longKey.empty()) {
+					temp->longKey = _str.substr(i);
+					temp->value.emplace(item);
+					return;
+				}
 			}
 			if (!temp->map[logic.hash(str[i])]) {
 				temp->map[logic.hash(str[i])] = getNewTrieNode();
@@ -79,7 +90,7 @@ public:
 
 			temp = temp->map[logic.hash(str[i])];
 		}
-		temp->isEndOfWord.emplace(item);
+		temp->value.emplace(item);
 	}
 
 	/*function to search in trie*/
@@ -109,6 +120,6 @@ public:
 					return {};
 			}
 		}
-		return temp->isEndOfWord;
+		return temp->value;
 	}
 };
