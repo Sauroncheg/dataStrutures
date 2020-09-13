@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Trie.hh"
 #include "CollapsedTrie.hh"
+#include "Trie.hh"
 #include "gtest/gtest.h"
 
 // just slova
@@ -49,7 +50,56 @@ public:
 
 std::vector<std::string> TestEnvironment::vec;
 
-TEST(sample_test_case, sample_test) {
+TEST(trie_test_case, sample_test) {
+	auto* root = new Trie<int, SmallLetters>;
+	std::optional<int> it;
+	root->insert("geeks", 1);
+	root->insert("for", 1);
+	it = root->search("geeks");
+	EXPECT_EQ(it, 1);
+	it = root->search("gee");
+	EXPECT_EQ(it, std::nullopt);
+
+	root->insert("for", 2);
+	it = root->search("for");
+	EXPECT_EQ(it, 2);
+
+	it = root->search("greeks");
+	EXPECT_EQ(it, std::nullopt);
+
+	root->insert("gee", 1);
+	it = root->search("gee");
+	EXPECT_EQ(it, 1);
+	it = root->search("geeks");
+	EXPECT_EQ(it, 1);
+
+	root->insert("geekss", 2);
+	it = root->search("geeks");
+	EXPECT_EQ(it, 1);
+
+	for (auto& item : *root) {
+
+	}
+}
+
+TEST(trie_test_case, data) {
+	auto* root = new Trie<int, SmallLetters>;
+	for (int j = 0; j < 1; j++) {
+		int i = 0;
+		for (const auto& str : TestEnvironment::vec) {
+			root->insert(str, i++);
+		}
+	}
+
+	for (int j = 0; j < 1; j++) {
+		int i = 0;
+		for (const auto& str : TestEnvironment::vec) {
+			EXPECT_EQ(i++, root->search(str));
+		}
+	}
+}
+
+TEST(collapsed_trie_test_case, sample_test) {
 	auto* root = new CollapsedTrie<int, SmallLetters>;
 	std::optional<int> it;
 	root->insert("geeks", 1);
@@ -77,43 +127,37 @@ TEST(sample_test_case, sample_test) {
 	EXPECT_EQ(it, 1);
 }
 
-TEST(sample_test_case, data) {
+TEST(collapsed_trie_test_case, data) {
 	auto* root = new CollapsedTrie<int, SmallLetters>;
 	for (int j = 0; j < 1; j++) {
 		int i = 0;
 		for (const auto& str : TestEnvironment::vec) {
-			i++;
-			root->insert(str, i);
+			root->insert(str, i++);
 		}
 	}
 
 	for (int j = 0; j < 1; j++) {
 		int i = 0;
 		for (const auto& str : TestEnvironment::vec) {
-			i++;
-
-			EXPECT_EQ(i, root->search(str));
+			EXPECT_EQ(i++, root->search(str));
 		}
 	}
 }
 
-TEST(sample_test_case, data1) {
+TEST(std_map_timing, data) {
 	std::map<std::string, int> root;
 
 	for (int j = 0; j < 1; j++) {
 		int i = 0;
 		for (const auto& str : TestEnvironment::vec) {
-			i++;
-			root[str] = i;
+			root[str] = i++;
 		}
 	}
 	
 	for (int j = 0; j < 1; j++) {
 		int i = 0;
 		for (const auto& str : TestEnvironment::vec) {
-			i++;
-
-			EXPECT_EQ(i, root.find(str)->second);
+			EXPECT_EQ(i++, root.find(str)->second);
 		}
 	}
 }

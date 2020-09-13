@@ -33,3 +33,6 @@
 
 # build dirs
 build
+
+# vs data files
+.vs
