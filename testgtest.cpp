@@ -38,9 +38,13 @@ public:
 			if (!in.empty())
 				vec.push_back(in);
 		}
+
+		sorted = vec;
+		std::sort(sorted.begin(), sorted.end());
 	}
 
 	static std::vector<std::string> vec;
+	static std::vector<std::string> sorted;
 
 	// Initialise the timestamp.
 	virtual void SetUp() {
@@ -49,6 +53,7 @@ public:
 };
 
 std::vector<std::string> TestEnvironment::vec;
+std::vector<std::string> TestEnvironment::sorted;
 
 TEST(trie_test_case, sample_test) {
 	auto* root = new Trie<int, SmallLetters>;
@@ -76,10 +81,38 @@ TEST(trie_test_case, sample_test) {
 	root->insert("geekss", 2);
 	it = root->search("geeks");
 	EXPECT_EQ(it, 1);
+	delete root;
+}
 
-	for (auto& item : *root) {
 
+TEST(trie_test_case, starts_with_test) {
+	auto* root = new Trie<int, SmallLetters>;
+	root->insert("geeks", 1);
+	root->insert("for", 1);
+	root->insert("gee", 1);
+	root->insert("geekss", 2);
+
+	auto& ret = root->starts_with("g");
+
+	EXPECT_EQ(ret.size(), 3);
+	std::vector<string> cmp = { "gee" ,"geeks", "geekss" };
+	EXPECT_EQ(ret, cmp);
+	delete root;
+}
+
+TEST(trie_test_case, starts_with_data) {
+	auto* root = new Trie<int, SmallLetters>;
+	for (int j = 0; j < 1; j++) {
+		int i = 0;
+		for (const auto& str : TestEnvironment::vec) {
+			root->insert(str, i++);
+		}
 	}
+	for (int j = 0; j < 1; j++) {
+		auto& ret = root->starts_with("");
+		EXPECT_EQ(ret, TestEnvironment::sorted);
+	}
+	delete root;
 }
 
 TEST(trie_test_case, data) {
@@ -97,6 +130,7 @@ TEST(trie_test_case, data) {
 			EXPECT_EQ(i++, root->search(str));
 		}
 	}
+	delete root;
 }
 
 TEST(collapsed_trie_test_case, sample_test) {
@@ -125,6 +159,7 @@ TEST(collapsed_trie_test_case, sample_test) {
 	root->insert("geekss", 2);
 	it = root->search("geeks");
 	EXPECT_EQ(it, 1);
+	delete root;
 }
 
 TEST(collapsed_trie_test_case, data) {
@@ -142,6 +177,7 @@ TEST(collapsed_trie_test_case, data) {
 			EXPECT_EQ(i++, root->search(str));
 		}
 	}
+	delete root;
 }
 
 TEST(std_map_timing, data) {

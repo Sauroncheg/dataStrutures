@@ -37,13 +37,6 @@ class CollapsedTrie {
 		return node;
 	}
 
-	~CollapsedTrie() {
-		for (auto* it : map) {
-			if (it)
-				delete it;
-		}
-	}
-
 	void separate(const string_view& _str, ValueType item, CollapsedTrie* curItem, int substrbegin, int substrofset) {
 		std::string temp = curItem->longKey;
 		curItem->longKey = temp.substr(0, substrofset);
@@ -62,6 +55,13 @@ class CollapsedTrie {
 	}
 
 public: 
+	~CollapsedTrie() {
+		for (auto* it : map) {
+			if (it)
+				delete it;
+		}
+	}
+
 	/*function to insert in trie*/
 	void insert(const string_view& _str, ValueType item) {
 		std::string_view str(_str);
