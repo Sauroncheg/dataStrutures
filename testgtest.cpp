@@ -1,7 +1,6 @@
 #include <iostream>
 #include "Trie.hh"
 #include "CollapsedTrie.hh"
-#include "Trie.hh"
 #include "gtest/gtest.h"
 
 // just slova
@@ -32,7 +31,7 @@ public:
 		std::fstream file;
 		file.open(std::string("asd") + suf + ".txt", std::fstream::in);
 		if (!file.is_open())
-			throw(new std::exception);
+			throw(std::exception{});
 		std::string in;
 		while (std::getline(file, in)) {
 			if (!in.empty())
@@ -47,7 +46,7 @@ public:
 	static std::vector<std::string> sorted;
 
 	// Initialise the timestamp.
-	virtual void SetUp() {
+	void SetUp() override {
 		init_vec();
 	}
 };
@@ -92,7 +91,7 @@ TEST(trie_test_case, starts_with_test) {
 	root->insert("gee", 1);
 	root->insert("geekss", 2);
 
-	auto& ret = root->starts_with("g");
+	auto ret = root->starts_with("g");
 
 	EXPECT_EQ(ret.size(), 3);
 	std::vector<string> cmp = { "gee" ,"geeks", "geekss" };
@@ -109,7 +108,7 @@ TEST(trie_test_case, starts_with_data) {
 		}
 	}
 	for (int j = 0; j < 1; j++) {
-		auto& ret = root->starts_with("");
+		auto ret = root->starts_with("");
 		EXPECT_EQ(ret, TestEnvironment::sorted);
 	}
 	delete root;

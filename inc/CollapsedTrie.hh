@@ -15,9 +15,9 @@ struct SmallLetters {
 		return x - 'a';
 	}
 
-	static char rHash(const int x) {
-		return x + 'a';
-	}
+//	static char rHash(const int x) {
+//		return x + 'a';
+//	}
 };
 
 template <class ValueType, class Logic>
@@ -33,14 +33,14 @@ class CollapsedTrie {
 
 	/*function to make a new trie*/
 	CollapsedTrie* getNewTrieNode() {
-		CollapsedTrie* node = new CollapsedTrie;
+		auto* node = new CollapsedTrie;
 		return node;
 	}
 
 	void separate(const string_view& _str, ValueType item, CollapsedTrie* curItem, int substrbegin, int substrofset) {
 		std::string temp = curItem->longKey;
 		curItem->longKey = temp.substr(0, substrofset);
-		CollapsedTrie * it = new CollapsedTrie;
+		auto* it = new CollapsedTrie;
 		it->longKey = temp.substr(substrofset + 1);
 		it->map.swap(curItem->map);
 		it->value.swap(curItem->value);

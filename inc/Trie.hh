@@ -4,6 +4,7 @@
 #include <array>
 #include <optional>
 #include <vector>
+#include <memory>
 
 //using std::vector;
 using namespace std;
@@ -125,7 +126,7 @@ public:
 	}
 
 	/*function to insert in trie*/
-	void insert(const string& key, ValueType value) {
+	void insert(const string& key, ValueType new_value) {
 		Trie* temp = this;
 		for (const auto& x : key) {
 			/* make a new node if there is no path */
@@ -136,7 +137,7 @@ public:
 			temp = item.get();
 		}
 
-		temp->value.emplace(value);
+		temp->value.emplace(new_value);
 	}
 
 	/*function to search in trie*/
